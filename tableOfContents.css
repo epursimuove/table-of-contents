@@ -1,0 +1,49 @@
+#tableOfContents {
+    font-family: "Open Sans", arial, sans-serif;
+    font-size: .8em;
+    background: #fffcfc;
+    position: fixed;
+    border: 1px solid #dddddd;
+    padding: .5em;
+    top: 10px;
+    right: 10px;
+    opacity: .95;
+    max-height: 85%;
+    overflow-y: auto;
+}
+
+#tableOfContents .meta {
+    font-style: italic;
+}
+
+#tableOfContents .floatRight {
+    float: right;
+}
+
+#tableOfContents #tableOfContentsList.collapsed {
+    display: none;
+}
+
+#tableOfContents div#tableOfContentsLabel {
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+#tableOfContents ol {
+    padding-left: 0;
+}
+
+#tableOfContents ol ol {
+    padding-left: 1.5em;
+}
+
+#tableOfContents ol li {
+    list-style-type: none;
+    margin: .3em 0;
+}
+
+#tableOfContents a, #tableOfContents a:visited {
+    text-decoration: none;
+    color: #217ac0;
+}
