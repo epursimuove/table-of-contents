@@ -17,7 +17,7 @@ function generateTableOfContents() {
     const tableOfContents = $('<div id="tableOfContents"></div>');
     tableOfContentsContainer.append(tableOfContents);
 
-    const tableOfContentsLabel = $('<div/>', {
+    const tableOfContentsLabel = $('<div></div>', {
         id: 'tableOfContentsLabel',
         html: 'Table of contents',
         onClick: 'toggleTableOfContentsList()',
