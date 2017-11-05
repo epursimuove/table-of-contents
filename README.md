@@ -73,7 +73,7 @@ See for example [downloading jQuery][] and [jQuery CDN][] for details.
 
 There are only two files that you need to know about. All the functionality is implemented within the `tableOfContents.js` file. The styling is accomplished by the `tableOfContents.css` file.
 
-The *Table of Contents* block will be generated when the `$(document).ready()` call kicks in after the HTML page has been loaded. The Javascript function `generateTableOfContents()` will build the HTML block containing the *Table of Contents*, using information from all the HTML heading elements `h1`-`h6` found on the existing page. These elements should lie in a *plain* structure, i.e. not nested within each other or nested in other elements.
+The *Table of Contents* block will be generated when the `$(document).ready()` call kicks in after the HTML page has been loaded. The Javascript function `generateTableOfContents()` will build the HTML block containing the *Table of Contents*, using information from all the HTML heading elements `h1`-`h6` found on the existing page. These elements should lie in a *plain* structure, i.e. not nested within each other or nested in other elements. For each `h1`-`h6` element, an anchor tag, for example `<a id="toc_3.1.2"></a>`, is inserted just before the heading element.
 
 
 
@@ -83,7 +83,7 @@ The *Table of Contents* block will be generated when the `$(document).ready()` c
 
 You can alter the JS file (`tableOfContents.js`) if you need your own specific behaviour:
 * If you just want to support `h2`-`h4` you can modify the constant `SUPPORTED_HEADING_LEVELS`.
-* If you want to start with another element than `body`, you can modify the constant `startItem`.
+* If you want to start with another element than `body`, you can modify the constant `startItem`. If you, for example, have your heading elements buried in a `div` element with the `id` attribute 'myOwnContent', you can use a startItem like `$('div#myOwnContent')`.
 * If you need to see details about what is happening, you can toggle console logging via the constant `USE_LOGGING`.
 
 #### Stylesheet
@@ -105,7 +105,7 @@ The block can be collapsed (and expanded) by clicking on the *Table of contents*
 
 A link to the *Top of page* is always automatically generated.
 
-There is some opacity to the block, so the underlying content will be slightly visible...
+There is some opacity to the block, so the underlying content will be slightly visible.
 
 The generated block is appended to the DOM tree at the bottom of the `body` element. The top level outermost element in this block will be
 

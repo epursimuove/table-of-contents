@@ -8,6 +8,7 @@ log('Loading tableOfContents.js file');
 
 const SUPPORTED_HEADING_LEVELS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 log('Supported headings', SUPPORTED_HEADING_LEVELS);
+const LOG_INDENTATIONS = ['    ', '        ', '            ', '                ', '                    ', '                        '];
 
 function generateTableOfContents() {
     log('Generating ToC and adding the block to the body element');
@@ -31,20 +32,23 @@ function generateTableOfContents() {
     const topOfPageLink = $('<div class="meta"></div>');
     tableOfContentsList.append(topOfPageLink);
 
-    const topOfPageHref = $('<a/>', {
+    const topOfPageHref = $('<a></a>', {
         href: '#',
         html: '[Top of page]',
         title: 'Top of page'
     });
     topOfPageLink.append(topOfPageHref);
 
-    const startItem = tableOfContentsContainer.children(":first-child");
+    const startItem = tableOfContentsContainer;
+    // const startItem = $('div#myOwnContent');
+    // const startItem = $('div#content');
+    log('Using start item', startItem);
 
     const wrapper = {
         level: 0,
         levelPrefix: null,
         currentToCListItem: tableOfContentsList,
-        startElementForSearching: startItem
+        startElementForSearching: startItem.children(":first-child")
     };
 
     buildSublist(wrapper);
@@ -62,6 +66,11 @@ function buildSublist(wrapper) {
     const headingToSearchFor = SUPPORTED_HEADING_LEVELS[level];
     const headingThatStopsSearching = level === 0 ? null : SUPPORTED_HEADING_LEVELS[level - 1];
 
+    const logPrefix = LOG_INDENTATIONS[level];
+
+    log(logPrefix + 'Starts searching for heading', headingToSearchFor);
+    log(logPrefix + 'Heading that will stop the searching', headingThatStopsSearching);
+
     const startElementIsTheSameAsTheHeadingWeAreLookingFor =
         startElementForSearching.prop('tagName').toUpperCase() === headingToSearchFor.toUpperCase();
 
@@ -70,6 +79,8 @@ function buildSublist(wrapper) {
         startElementForSearching.nextUntil(headingThatStopsSearching, headingToSearchFor);
 
     const numberOfSubHeadings = subHeadings.length;
+    log(logPrefix + 'Number of sub headings of type ' + headingToSearchFor + " = " + numberOfSubHeadings);
+
     if (numberOfSubHeadings > 0) {
 
         const tocListOfSubHeadings = $('<ol class="level' + level + '">');
@@ -77,20 +88,21 @@ function buildSublist(wrapper) {
 
         for (var k = 0; k < numberOfSubHeadings; k++) {
             const subHeading = $(subHeadings[k]);
+            const labelForHeading = subHeading.html();
 
             const headingLevelIdentifier = (levelPrefix !== null ? levelPrefix + '.' : '') + (k + 1);
+            log(logPrefix + 'Starts examining ' + headingLevelIdentifier + ' (named "' + labelForHeading + '")');
 
             const anchorToHeading = $('<a id="toc_' + headingLevelIdentifier + '"></a>');
             anchorToHeading.insertBefore(subHeading);
 
-            const headingLinkInTableOfContents = $('<a/>', {
-                html: subHeading.html(),
+            const headingLinkInTableOfContents = $('<a></a>', {
+                html: labelForHeading,
                 href: '#toc_' + headingLevelIdentifier
             });
 
             const headingInTableOfContents = $('<li>').append(headingLinkInTableOfContents);
             tocListOfSubHeadings.append(headingInTableOfContents);
-            log('Added heading', headingLevelIdentifier);
 
             if (level + 1 < SUPPORTED_HEADING_LEVELS.length) {
                 const nextLevelWrapper = {
@@ -102,8 +114,10 @@ function buildSublist(wrapper) {
 
                 buildSublist(nextLevelWrapper); // Here is the recursive call.
             }
+            log(logPrefix + 'Done examining ' + headingLevelIdentifier + ' (named "' + labelForHeading + '")');
         }
     }
+    log(logPrefix + 'Done searching for heading', headingToSearchFor);
 }
 
 function toggleTableOfContentsList() {
