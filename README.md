@@ -9,6 +9,8 @@ This project was started in April 2017 when I wanted a simple and elegant soluti
 
 In February 2019 the code was revised and refactored quite a bit.
  
+ In April 2020 the dependency on jQuery was removed.
+
 
 ## Files
 
@@ -24,7 +26,6 @@ The project consists of the following files:
 ├── exampleSmall.html
 ├── example_tableOfContents.png
 └── js
-    ├── jquery-3.2.1.min.js
     └── tableOfContents.js
 ```
 
@@ -47,35 +48,12 @@ You will need to include the `tableOfContents.js` and `tableOfContents.css` file
 </head>
 ```
 
-You will also need the *[jQuery Core][jQuery]* (version 3.2.1 or later), which you can for example include as
-
-```html
-<script type="text/javascript"
-        src="https://code.jquery.com/jquery-3.2.1.min.js"
-        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-        crossorigin="anonymous"></script>
-```
-
-or by including a local copy (there is a local copy in the js-directory)
-
-```html
-<script type="text/javascript"
-        src="<your>/<path>/jquery-3.2.1.min.js"></script>
-```
-
-See for example [downloading jQuery][] and [jQuery CDN][] for details.
-
-
-   [jQuery]: https://jquery.com/ "jQuery"
-   [Downloading jQuery]: https://jquery.com/download "Downloading jQuery"
-   [jQuery CDN]: https://code.jquery.com "jQuery CDN"
-
 
 ## Documentation
 
 There are only two files that you need to know about. All the functionality is implemented within the `tableOfContents.js` file. The styling is accomplished by the `tableOfContents.css` file.
 
-The *Table of Contents* block will be generated when the `jQuery(document).ready()` call kicks in after the HTML page has been loaded. The JavaScript function `generateTableOfContents()` will build the HTML block containing the *Table of Contents*, using information from all the HTML heading elements `h1`-`h6` found on the existing page. These elements should lie in a *plain* structure, i.e. not nested within each other or nested in other elements. For each `h1`-`h6` element, an anchor tag, for example `<a id="toc_3.1.2"></a>`, is inserted just before the heading element.
+The *Table of Contents* block will be generated when the `whenDomFullyLoaded()` call kicks in after the HTML page has been loaded. The JavaScript function `generateTableOfContents()` will build the HTML block containing the *Table of Contents*, using information from all the HTML heading elements `h1`-`h6` found on the existing page. These elements should lie in a *plain* structure, i.e. not nested within each other or nested in other elements. For each `h1`-`h6` element, an anchor tag, for example `<a id="toc_3.1.2"></a>`, is inserted just before the heading element.
 
 
 
@@ -242,7 +220,7 @@ Since the `Table of Contents` block is dynamically generated, the HTML for it wi
 
 ### Real world examples
 
-At the NNM pages [Time zones - to be or not to be][], [Roman numerals converter][] and [Clock angle][] you have real world examples of using *table-of-contents*.
+At the *NNM* pages [Time zones - to be or not to be][], [Roman numerals converter][] and [Clock angle][] you have real world examples of using *table-of-contents*.
 
    [Time zones - to be or not to be]: http://anders.nemonisimors.com/timeZones.php "Time zones - to be or not to be"
 

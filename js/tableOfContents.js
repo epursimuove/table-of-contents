@@ -3,9 +3,23 @@
 // Project homepage: https://github.com/epursimuove/table-of-contents
 // Created by Anders Gustafson, April 2017.
 // Revised February 2019.
+// Revised April 2020.
 //
 
 'use strict';
+
+const log = (message, object, level) => {
+    if (CONFIGURATION.useLogging) {
+        if (level) {
+            message = ' '.repeat(4 * level) + message;
+        }
+        if (object !== undefined) {
+            console.log(message, object);
+        } else {
+            console.log(message);
+        }
+    }
+}
 
 const CONFIGURATION = {
     supportedHeadingLevels: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
@@ -17,59 +31,59 @@ const CONFIGURATION = {
 log('Loading tableOfContents.js file');
 log('Configuration', CONFIGURATION);
 
-function generateTableOfContents() {
+const generateTableOfContents = () => {
     log('Generating ToC and adding the block to the body element');
 
-    const tableOfContentsContainer = jQuery('body');
+    const tableOfContentsContainer = getHtmlElementBySelector('body');
 
-    const tableOfContents = jQuery('<div id="tableOfContents"></div>');
+    const tableOfContents = createElement('div', {id: 'tableOfContents'});
     tableOfContentsContainer.append(tableOfContents);
 
-    const tableOfContentsLabel = jQuery('<div></div>', {
-        id: 'tableOfContentsLabel',
-        html: 'Table of contents',
-        onClick: 'toggleTableOfContentsList()',
-        title: 'Collapse/expand the Table of Contents block'
-    });
+    const tableOfContentsLabel = createElement('div', {
+            id: 'tableOfContentsLabel',
+            onClick: 'toggleTableOfContentsList()',
+            title: 'Collapse/expand the Table of Contents block'
+        },
+        'Table of contents');
     tableOfContents.append(tableOfContentsLabel);
 
-    const tableOfContentsCollapseIcon = jQuery('<span></span>', {
-        id: 'tableOfContentsCollapseIcon',
-        html: '-',
-        class: CONFIGURATION.expandedByDefault ? '' : 'collapsed'
-    });
+    const tableOfContentsCollapseIcon = createElement('span', {
+            id: 'tableOfContentsCollapseIcon',
+            class: CONFIGURATION.expandedByDefault ? '' : 'collapsed'
+        },
+        '-');
     tableOfContentsLabel.append(tableOfContentsCollapseIcon);
-    const tableOfContentsExpandIcon = jQuery('<span></span>', {
-        id: 'tableOfContentsExpandIcon',
-        html: '+',
-        class: CONFIGURATION.expandedByDefault ? 'collapsed' : ''
-    });
+    const tableOfContentsExpandIcon = createElement('span', {
+            id: 'tableOfContentsExpandIcon',
+            class: CONFIGURATION.expandedByDefault ? 'collapsed' : ''
+        },
+        '+');
     tableOfContentsLabel.append(tableOfContentsExpandIcon);
 
-    const tableOfContentsList = jQuery('<div></div>', {
+    const tableOfContentsList = createElement('div', {
         id: 'tableOfContentsList',
         class: CONFIGURATION.expandedByDefault ? '' : 'collapsed'
     });
     tableOfContents.append(tableOfContentsList);
 
-    const topOfPageLink = jQuery('<div class="meta"></div>');
+    const topOfPageLink = createElement('div', {class: 'meta'});
     tableOfContentsList.append(topOfPageLink);
 
-    const topOfPageHref = jQuery('<a></a>', {
-        href: '#',
-        html: '[Top of page]',
-        title: 'Top of page'
-    });
+    const topOfPageHref = createElement('a', {
+            href: '#',
+            title: 'Top of page'
+        },
+        '[Top of page]');
     topOfPageLink.append(topOfPageHref);
 
-    const startItem = jQuery(CONFIGURATION.startItemIdentifier);
+    const startItem = getHtmlElementBySelector(CONFIGURATION.startItemIdentifier);
     log('Using start item', startItem);
 
     const wrapper = {
         level: 0,
         levelPrefix: null,
         currentToCListItem: tableOfContentsList,
-        startElementForSearching: startItem.children(":first-child")
+        startElementForSearching: startItem.querySelector(":first-child")
     };
 
     buildSublist(wrapper);
@@ -77,7 +91,7 @@ function generateTableOfContents() {
     log('ToC generated');
 }
 
-function buildSublist(wrapper) {
+const buildSublist = (wrapper) => {
 
     const level = wrapper.level;
     const levelPrefix = wrapper.levelPrefix;
@@ -93,42 +107,42 @@ function buildSublist(wrapper) {
     logWithIndentation('Heading that will stop the searching', headingThatStopsSearching);
 
     const startElementIsTheSameAsTheHeadingWeAreLookingFor =
-        startElementForSearching.prop('tagName').toUpperCase() === headingToSearchFor.toUpperCase();
+        startElementForSearching.tagName.toUpperCase() === headingToSearchFor.toUpperCase();
 
     const subHeadings = startElementIsTheSameAsTheHeadingWeAreLookingFor ?
-        startElementForSearching.nextUntil(headingThatStopsSearching, headingToSearchFor).addBack() :
-        startElementForSearching.nextUntil(headingThatStopsSearching, headingToSearchFor);
+        findSubHeadings(startElementForSearching, headingThatStopsSearching, headingToSearchFor, true) :
+        findSubHeadings(startElementForSearching, headingThatStopsSearching, headingToSearchFor);
 
     const numberOfSubHeadings = subHeadings.length;
     logWithIndentation('Number of sub headings of type ' + headingToSearchFor + " = " + numberOfSubHeadings);
 
     if (numberOfSubHeadings > 0) {
 
-        const tocListOfSubHeadings = jQuery('<ol class="level' + level + '">');
+        const tocListOfSubHeadings = createElement('ol', {class: 'level' + level});
         currentToCListItem.append(tocListOfSubHeadings);
 
         for (let k = 0; k < numberOfSubHeadings; k++) {
-            const subHeading = jQuery(subHeadings[k]);
-            const labelForHeading = subHeading.html();
+            const subHeading = subHeadings[k];
+            const labelForHeading = subHeading.textContent;
 
             const headingLevelIdentifier = (levelPrefix !== null ? levelPrefix + '.' : '') + (k + 1);
             logWithIndentation('Starts examining ' + headingLevelIdentifier + ' (named "' + labelForHeading + '")');
 
-            const anchorToHeading = jQuery('<a id="toc_' + headingLevelIdentifier + '"></a>');
-            anchorToHeading.insertBefore(subHeading);
+            const anchorToHeading = createElement('a', {id: 'toc_' + headingLevelIdentifier});
+            insertBefore(subHeading, anchorToHeading);
 
-            const headingInTableOfContents = jQuery('<li></li>');
+            const headingInTableOfContents = createElement('li');
             if (CONFIGURATION.useNumbering) {
-                const headingNumbering = jQuery('<span></span>', {
-                    html: headingLevelIdentifier,
-                    class: 'headingNumbering'
-                });
+                const headingNumbering = createElement('span', {
+                        class: 'headingNumbering'
+                    },
+                    headingLevelIdentifier);
                 headingInTableOfContents.append(headingNumbering);
             }
-            const headingLinkInTableOfContents = jQuery('<a></a>', {
-                html: labelForHeading,
-                href: '#toc_' + headingLevelIdentifier
-            });
+            const headingLinkInTableOfContents = createElement('a', {
+                    href: '#toc_' + headingLevelIdentifier
+                },
+                labelForHeading);
             headingInTableOfContents.append(headingLinkInTableOfContents);
             tocListOfSubHeadings.append(headingInTableOfContents);
 
@@ -148,27 +162,67 @@ function buildSublist(wrapper) {
     logWithIndentation('Done searching for heading', headingToSearchFor);
 }
 
-function toggleTableOfContentsList() {
-    log('Toggling Table of contents');
-    ['#tableOfContentsList', '#tableOfContentsCollapseIcon', '#tableOfContentsExpandIcon']
-        .forEach((identifier) => {
-            jQuery(identifier).toggleClass('collapsed');
-        });
-}
+const getHtmlElementById = id => document.getElementById(id);
 
-function log(message, object, level) {
-    if (CONFIGURATION.useLogging) {
-        if (level) {
-            message = ' '.repeat(4 * level) + message;
-        }
-        if (object !== undefined) {
-            console.log(message, object);
-        } else {
-            console.log(message);
+const getHtmlElementBySelector = selector => document.querySelector(selector);
+
+const createElement = (tagName, attributes, textContent) => {
+    const element = document.createElement(tagName);
+
+    for (const attribute in attributes) {
+        if (attributes.hasOwnProperty(attribute)) {
+            element.setAttribute(attribute, attributes[attribute]);
         }
     }
+
+    if (textContent) {
+        element.textContent = textContent;
+    }
+
+    return element;
+}
+
+const insertBefore = (existingElement, elementToInsert) => existingElement.insertAdjacentElement('beforebegin', elementToInsert);
+
+const findSubHeadings = (startElement, headingThatStopsSearching, headingToSearchFor, includeStartElement = false) => {
+
+    const subHeadings = [];
+    if (includeStartElement) {
+        subHeadings.push(startElement);
+    }
+
+    for (let currentElement = startElement.nextElementSibling;
+         currentElement !== null;
+         currentElement = currentElement.nextElementSibling) {
+
+        const tagName = currentElement.tagName.toLowerCase();
+
+        if (tagName === headingToSearchFor) {
+            subHeadings.push(currentElement);
+        }
+        else if (tagName === headingThatStopsSearching) {
+            break;
+        }
+    }
+
+    return subHeadings;
+}
+
+const toggleTableOfContentsList = () => {
+    log('Toggling Table of contents');
+    ['tableOfContentsList', 'tableOfContentsCollapseIcon', 'tableOfContentsExpandIcon']
+        .forEach((identifier) => {
+            getHtmlElementById(identifier).classList.toggle('collapsed');
+        });
 }
 
 log('Loading tableOfContents.js file done');
 
-jQuery(document).ready(generateTableOfContents);
+const whenDomFullyLoaded = (callbackFunction) => {
+    if (document.readyState !== 'loading') {
+        callbackFunction();
+    } else {
+        document.addEventListener('DOMContentLoaded', callbackFunction);
+    }
+}
+whenDomFullyLoaded(generateTableOfContents);
