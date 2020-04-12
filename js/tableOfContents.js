@@ -8,7 +8,7 @@
 
 'use strict';
 
-(function () {
+const tableOfContentsFunctions = (function () {
 
     const log = (message, object, level) => {
         if (CONFIGURATION.useLogging) {
@@ -43,7 +43,7 @@
 
         const tableOfContentsLabel = createElement('div', {
                 id: 'tableOfContentsLabel',
-                onClick: 'toggleTableOfContentsList()',
+                onClick: 'tableOfContentsFunctions.toggleTableOfContentsList()',
                 title: 'Collapse/expand the Table of Contents block'
             },
             'Table of contents');
@@ -228,4 +228,7 @@
     }
     whenDomFullyLoaded(generateTableOfContents);
 
+    return {
+        toggleTableOfContentsList
+    }
 })();
