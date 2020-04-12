@@ -38,6 +38,7 @@
     top: 45px;
     max-height: 85%;
     overflow-y: auto;
+    /*max-width: 25em;*/
 }
 
 #tableOfContents ol {
@@ -56,6 +57,10 @@
 #tableOfContents a, #tableOfContents a:visited {
     text-decoration: none;
     color: #217ac0;
+}
+
+#tableOfContents a:hover {
+    color: deepskyblue;
 }
 
 #tableOfContents .headingNumbering {

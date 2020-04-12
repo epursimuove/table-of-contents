@@ -95,6 +95,11 @@ You can alter the CSS file (`tableOfContents.css`) if you need your own specific
 * Opacity.
 
 
+##### Max width for ToC list
+
+You can define a max width of the generated list by using the `max-width` property in the `#tableOfContents div#tableOfContentsList` CSS rule set (commented out by default).
+
+
 ### The generated *Table of Contents* block
 
 The *Table of Contents* block will, by default, be fixed to the upper right corner of your web page.
