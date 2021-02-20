@@ -4,6 +4,7 @@
 // Created by Anders Gustafson, April 2017.
 // Revised February 2019.
 // Revised April 2020.
+// Revised February 2021.
 //
 
 'use strict';
@@ -26,7 +27,9 @@ const tableOfContentsFunctions = (function () {
     const CONFIGURATION = {
         supportedHeadingLevels: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
         startItemIdentifier: 'body', // 'div#myOwnContent' 'div#content'
+        inlineTableOfContentsIdentifier: 'inlineTableOfContents', // null
         expandedByDefault: true,
+        expandedByDefaultInline: false,
         useNumbering: true,
         useLogging: false // Set this to true if you want to use console logging.
     };
@@ -90,7 +93,62 @@ const tableOfContentsFunctions = (function () {
 
         buildSublist(wrapper);
 
+        generateOptionalInlineList(tableOfContentsList);
+
         log('ToC generated');
+    }
+
+    const generateOptionalInlineList = tableOfContentsList => {
+        log('Generating optional inline ToC');
+        if (CONFIGURATION.inlineTableOfContentsIdentifier) {
+            log('Inserting ToC at identifier', CONFIGURATION.inlineTableOfContentsIdentifier);
+            const inlineWrapperElement = getHtmlElementById(CONFIGURATION.inlineTableOfContentsIdentifier);
+
+            if (inlineWrapperElement) {
+                const copyOfToCElement = tableOfContentsList.cloneNode(true);
+                copyOfToCElement.id = 'inlineTableOfContentsList';
+                const obsoleteMetaDataElement = copyOfToCElement.firstChild;
+                if (obsoleteMetaDataElement.parentNode) {
+                    obsoleteMetaDataElement.parentNode.removeChild(obsoleteMetaDataElement);
+                }
+
+                copyOfToCElement.classList.remove('collapsed');
+                if (!CONFIGURATION.expandedByDefaultInline) {
+                    copyOfToCElement.classList.add('collapsed');
+                }
+
+                const tableOfContentsLabelHeading = 'div'; //CONFIGURATION.supportedHeadingLevels[0];
+                const tableOfContentsLabel = createElement(tableOfContentsLabelHeading, {
+                        id: 'inlineTableOfContentsLabel',
+                        onClick: 'tableOfContentsFunctions.toggleInlineTableOfContentsList()',
+                        title: 'Collapse/expand the Table of Contents block'
+                    },
+                    'Table of contents');
+                inlineWrapperElement.append(tableOfContentsLabel);
+
+                {
+                    const tableOfContentsCollapseIcon = createElement('span', {
+                            id: 'inlineTableOfContentsCollapseIcon',
+                            class: CONFIGURATION.expandedByDefaultInline ? '' : 'collapsed'
+                        },
+                        '-');
+                    tableOfContentsLabel.append(tableOfContentsCollapseIcon);
+                    const tableOfContentsExpandIcon = createElement('span', {
+                            id: 'inlineTableOfContentsExpandIcon',
+                            class: CONFIGURATION.expandedByDefaultInline ? 'collapsed' : ''
+                        },
+                        '+');
+                    tableOfContentsLabel.append(tableOfContentsExpandIcon);
+                }
+
+                inlineWrapperElement.append(copyOfToCElement);
+                log('Inline ToC is generated');
+                // log('XXX', copyOfToCElement);
+
+            } else {
+                log('Identifier not found in HTML');
+            }
+        }
     }
 
     const buildSublist = (wrapper) => {
@@ -217,6 +275,14 @@ const tableOfContentsFunctions = (function () {
             });
     }
 
+    const toggleInlineTableOfContentsList = () => {
+        log('Toggling inline Table of contents');
+        ['inlineTableOfContentsList', 'inlineTableOfContentsCollapseIcon', 'inlineTableOfContentsExpandIcon']
+            .forEach((identifier) => {
+                getHtmlElementById(identifier).classList.toggle('collapsed');
+            });
+    }
+
     log('Loading tableOfContents.js file done');
 
     const whenDomFullyLoaded = (callbackFunction) => {
@@ -229,6 +295,7 @@ const tableOfContentsFunctions = (function () {
     whenDomFullyLoaded(generateTableOfContents);
 
     return {
-        toggleTableOfContentsList
+        toggleTableOfContentsList,
+        toggleInlineTableOfContentsList
     }
 })();

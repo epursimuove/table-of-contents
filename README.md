@@ -11,6 +11,8 @@ In February 2019 the code was revised and refactored quite a bit.
  
  In April 2020 the dependency on jQuery was removed.
 
+In February 2021 the functionality for an optional block of *Table of Contents* was added.
+
 
 ## Files
 
@@ -67,7 +69,9 @@ You can alter the JS file (`tableOfContents.js`) if you need your own specific b
 const CONFIGURATION = {
     supportedHeadingLevels: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
     startItemIdentifier: 'body',
+    inlineTableOfContentsIdentifier: 'inlineTableOfContents',
     expandedByDefault: true,
+    expandedByDefaultInline: false,
     useNumbering: true,
     useLogging: false
 };
@@ -82,6 +86,15 @@ const CONFIGURATION = {
 * If you want explicit numbering of the headings, you use `CONFIGURATION.useNumbering`. If `true` every heading in the *Table of Contents* will be prefixed (with for example *1*, *1.1*, *1.1.1*).
 
 * If you need to see details about what is happening, you can toggle console logging via `CONFIGURATION.useLogging`.
+
+
+##### Optional Table of Contents in page
+
+There is a possibility to display a ToC in the normal flow of the page (together with the floating default ToC).
+
+* To use this. Define `CONFIGURATION.inlineTableOfContentsIdentifier` (set it to `null` if you don't want this). In your HTML page you also have to add a `div` element with the same id, in the position where you want your ToC.
+
+* If the *Table of Contents* should be expanded by default is defined by `CONFIGURATION.expandedByDefaultInline`.
 
 
 #### Stylesheet
@@ -117,6 +130,11 @@ The generated block is appended to the DOM tree at the *bottom* of the `body` el
 ...
 </div>
 ```
+
+#### The optional generated *Table of Contents* block
+
+If defined, a copy of the generated DOM tree is used. This block can also be collapsed/expanded by clicking on its label.
+
 
 ### The `tableOfContents.js` file
 
@@ -217,6 +235,13 @@ The automatically generated block in the bottom of the `body` element will look 
 </div>
 ```
 A larger example can be found in the `example.html` file.
+
+Both of the example files also show how to use the optional ToC block. In the HTML files you see
+
+```html
+<div id="inlineTableOfContents"></div>
+```
+
 
 #### Viewing HTML for Table of Contents
 

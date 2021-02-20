@@ -11,7 +11,8 @@
     float: right;
 }
 
-#tableOfContents .collapsed {
+#tableOfContents .collapsed,
+#inlineTableOfContents .collapsed {
     display: none;
 }
 
@@ -41,29 +42,35 @@
     /*max-width: 25em;*/
 }
 
-#tableOfContents ol {
+#tableOfContents ol,
+#inlineTableOfContents ol {
     padding-left: 0;
 }
 
-#tableOfContents ol ol {
+#tableOfContents ol ol,
+#inlineTableOfContents ol ol {
     padding-left: 1.5em;
 }
 
-#tableOfContents ol li {
+#tableOfContents ol li,
+#inlineTableOfContents ol li {
     list-style-type: none;
     margin: .3em 0;
 }
 
-#tableOfContents a, #tableOfContents a:visited {
+#tableOfContents a, #tableOfContents a:visited,
+#inlineTableOfContents a, #inlineTableOfContents a:visited {
     text-decoration: none;
     color: #217ac0;
 }
 
-#tableOfContents a:hover {
+#tableOfContents a:hover,
+#inlineTableOfContents a:hover {
     color: deepskyblue;
 }
 
-#tableOfContents .headingNumbering {
+#tableOfContents .headingNumbering,
+#inlineTableOfContents .headingNumbering {
     font-size: .9em;
     margin-right: .5em;
     color: #666666;
@@ -97,4 +104,18 @@
     float: right;
     margin-left: 1em;
     font-family: Courier, monospace;
+}
+
+#inlineTableOfContents #inlineTableOfContentsCollapseIcon, #inlineTableOfContents #inlineTableOfContentsExpandIcon {
+    margin-left: 0.5em;
+    color: #dddddd;
+}
+
+#inlineTableOfContents #inlineTableOfContentsLabel {
+    cursor: pointer;
+    color: #999999;
+}
+
+#inlineTableOfContents #inlineTableOfContentsLabel:hover {
+    color: black;
 }
