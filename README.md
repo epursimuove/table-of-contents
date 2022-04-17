@@ -13,6 +13,8 @@ In February 2019 the code was revised and refactored quite a bit.
 
 In February 2021 the functionality for an optional block of *Table of Contents* was added.
 
+In April 2022, functionality for displaying heading numbering in original text was added.
+
 
 ## Files
 
@@ -55,7 +57,15 @@ You will need to include the `tableOfContents.js` and `tableOfContents.css` file
 
 There are only two files that you need to know about. All the functionality is implemented within the `tableOfContents.js` file. The styling is accomplished by the `tableOfContents.css` file.
 
-The *Table of Contents* block will be generated when the `whenDomFullyLoaded()` call kicks in after the HTML page has been loaded. The JavaScript function `generateTableOfContents()` will build the HTML block containing the *Table of Contents*, using information from all the HTML heading elements `h1`-`h6` found on the existing page. These elements should lie in a *plain* structure, i.e. not nested within each other or nested in other elements. For each `h1`-`h6` element, an anchor tag, for example `<a id="toc_3.1.2"></a>`, is inserted just before the heading element.
+
+
+### Code generation
+
+The *Table of Contents* block will be generated when the `whenDomFullyLoaded()` call kicks in after the HTML page has been loaded.
+
+The JavaScript function `generateTableOfContents()` will build the HTML block containing the *Table of Contents*, using information from all the HTML heading elements `h1`-`h6` found on the existing page. These elements should lie in a *plain* structure, i.e. not nested within each other or nested in other elements.
+
+For each `h1`-`h6` element, an anchor tag, for example `<a id="toc_3.1.2"></a>`, is inserted just before the heading element. (The reason to add new elements is that you may already have an id attribute on the existing heading elements.)
 
 
 
@@ -95,6 +105,21 @@ There is a possibility to display a ToC in the normal flow of the page (together
 * To use this. Define `CONFIGURATION.inlineTableOfContentsIdentifier` (set it to `null` if you don't want this). In your HTML page you also have to add a `div` element with the same id, in the position where you want your ToC.
 
 * If the *Table of Contents* should be expanded by default is defined by `CONFIGURATION.expandedByDefaultInline`.
+
+
+##### Another way to configure
+
+You can also modify the `CONFIGURATION` object directly from your own JavaScript code if you prefer that, since the `CONFIGURATION` object is reachable.
+
+The following is taken from `exampleSmall.js`.
+
+```javascript
+ <script>
+   tableOfContentsFunctions.CONFIGURATION.useNumberingInOriginalText = true;
+   tableOfContentsFunctions.CONFIGURATION.expandedByDefaultInline = true;
+   tableOfContentsFunctions.CONFIGURATION.supportedHeadingLevels = ["h1"];
+</script>
+```
 
 
 #### Stylesheet

@@ -5,6 +5,7 @@
 // Revised February 2019.
 // Revised April 2020.
 // Revised February 2021.
+// Revised April 2022.
 //
 
 'use strict';
@@ -31,6 +32,7 @@ const tableOfContentsFunctions = (function () {
         expandedByDefault: true,
         expandedByDefaultInline: false,
         useNumbering: true,
+        useNumberingInOriginalText: false,
         useLogging: false // Set this to true if you want to use console logging.
     };
     log('Loading tableOfContents.js file');
@@ -216,6 +218,12 @@ const tableOfContentsFunctions = (function () {
 
                     buildSublist(nextLevelWrapper); // Here is the recursive call.
                 }
+
+                if (CONFIGURATION.useNumberingInOriginalText) {
+                    logWithIndentation("Activating numbering for original heading " + headingLevelIdentifier);
+                    subHeading.classList.add("useNumberingInOriginalText");
+                }
+                
                 logWithIndentation('Done examining ' + headingLevelIdentifier + ' (named "' + labelForHeading + '")');
             }
         }
@@ -295,6 +303,7 @@ const tableOfContentsFunctions = (function () {
     whenDomFullyLoaded(generateTableOfContents);
 
     return {
+        CONFIGURATION,
         toggleTableOfContentsList,
         toggleInlineTableOfContentsList
     }
