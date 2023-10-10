@@ -121,12 +121,12 @@
 }
 
 :root {
-    counter-reset: h1 h2 h3 h4 h5 h6;
+    counter-reset: h1;
     --color-heading-numbering: darkgoldenrod;
 }
 
 h1 {
-    counter-reset: h2 h3 h4 h5 h6;
+    counter-reset: h2;
     counter-increment: h1;
 }
 
@@ -135,7 +135,7 @@ h1.useNumberingInOriginalText:before {
 }
 
 h2 {
-    counter-reset: h3 h4 h5 h6;
+    counter-reset: h3;
     counter-increment: h2;
 }
 
@@ -144,7 +144,7 @@ h2.useNumberingInOriginalText:before {
 }
 
 h3 {
-    counter-reset: h4 h5 h6;
+    counter-reset: h4;
     counter-increment: h3;
 }
 
@@ -153,7 +153,7 @@ h3.useNumberingInOriginalText:before {
 }
 
 h4 {
-    counter-reset: h5 h6;
+    counter-reset: h5;
     counter-increment: h4;
 }
 
